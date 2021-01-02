@@ -1,0 +1,17 @@
+{
+  "name": "render-js",
+  "version": "1.0.0",
+  "description": "Um bot para uma comunidade de JS",
+  "main": "core.js",
+  "scripts": {
+    "start": "node core.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "ms": "^2.1.3",
+    "quick.db": "^7.1.3"
+  }
+}
