@@ -2,4 +2,4 @@
 
 Venha ao nosso discord, de comunidade
 Há suporte 24Horas
-e Suporte JavaScript
+e Suporte JavaScrip

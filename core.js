@@ -16,17 +16,18 @@ client.on("message", (msg) => {
   }
 });
 
+/*
 client.on('ready', () => {
     setInterval(function(){ 
         console.log("ping");
      }, 30 * 1000);
-});
+});*/
 
 //Boas vindas
 client.on("guildMemberAdd", async (member) => { 
 
     let guild = await client.guilds.cache.get("792364532353335296");
-    let channel = await client.channels.cache.get("792364532676427793");
+    let channel = await client.channels.cache.get("795281274720878613");
     let emoji = await member.guild.emojis.cache.find(emoji => emoji.name === "nomedoemoji");
     if (guild != member.guild) {
       return console.log("Sem boas-vindas pra você! Sai daqui saco pela.");
@@ -38,7 +39,7 @@ client.on("guildMemberAdd", async (member) => {
         .setImage("")
         .setDescription(`**${member.user}**, bem-vindo(a) ao servidor **${guild.name}**! Atualmente estamos com **${member.guild.memberCount} membros**, divirta-se conosco! :heart:`)
         .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-        .setFooter("Código de Hyouka Discord")
+        .setFooter("Todos os direitos reservados!")
         .setTimestamp();
   
       channel.send(embed);
@@ -49,7 +50,7 @@ client.on("guildMemberAdd", async (member) => {
 client.on("guildMemberRemove", async (member) => { 
 
     let guild = await client.guilds.cache.get("792364532353335296");
-    let channel = await client.channels.cache.get("792364532676427794");
+    let channel = await client.channels.cache.get("795281274720878613");
     let emoji = await member.guild.emojis.cache.find(emoji => emoji.name === "nomedoemoji");
     if (guild != member.guild) {
       return console.log("Algum saco pela saiu do servidor. Mas não é nesse, então tá tudo bem :)");
@@ -61,7 +62,7 @@ client.on("guildMemberRemove", async (member) => {
         .setImage("https://imgur.com/3vYVlHb.gif")
         .setDescription(`**${member.user.username}**, saiu do servidor! :broken_heart:`)
         .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-        .setFooter("Código de Hyouka Discord")
+        .setFooter("Todos os direitos reservados!")
         .setTimestamp();
   
       channel.send(embed);
