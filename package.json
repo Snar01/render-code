@@ -7,8 +7,8 @@
     "start": "node core.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "LuCky_Boss1260",
+  "license": "MIT",
   "dependencies": {
     "discord.js": "^12.5.1",
     "fs": "0.0.1-security",
