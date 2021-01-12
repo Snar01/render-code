@@ -1,97 +1,94 @@
 const Discord = require("discord.js");
-const client  = new Discord.Client();
-const pass = require('./token.json');
-const config = require('./config.json');
+const config = require("./config.json");
+const client = new Discord.Client();
+const fs = require('fs');
+const Enmap = require('enmap');
+client.config = config;
 
-client.on("message", message => {
-if(message.channel.id === "792364533427339324") {
-  message.react('👍')
-  message.react('👎')
-};
+client.on('ready', () => {
+  setInterval(function(){ 
+      console.log("ping");
+   }, 9000);
 });
 
-client.on("message", (msg) => {
-  if(msg.content == "<@787339966685642784>") {
-    return msg.reply(`Olá eu sou o <@787339966685642784> e como mencionou-me acho que precisa de ajuda, \n Então o meu prefixo é: ${config.prefix} \n \n  agora basta fazer ${config.prefix}help e eu ajudarai!`)
+client.on("ready", () => {
+  console.log(`${client.user.tag} ready`);
+  client.user.setActivity(`${config.prefix}help | Render Code`)
+});
+
+client.commands = new Enmap();
+
+fs.readdir("./commands/", (err, files) => {
+  if (err) return console.error(err);
+  files.forEach(file => {
+    if (!file.endsWith(".js")) return;
+    let props = require(`./commands/${file}`);
+    let commandName = file.split(".")[0];
+    console.log(`Comando ${ commandName } carregado`);
+    client.commands.set(commandName, props);
+  });
+});
+
+client.on("message", message => {
+    if (message.author.bot) return;
+    if (message.channel.type == "dm") return;
+  
+    if (message.content.indexOf(client.config.prefix) !== 0) return;
+  
+    const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g);
+    const command = args.shift().toLowerCase();
+  
+    const cmd = client.commands.get(command);
+  
+    if (!cmd) return;
+  
+    cmd.run(client, message, args);
+});
+
+client.on("guildMemberAdd", async (member) => { 
+
+  let guild = await client.guilds.cache.get("792364532353335296");
+  let channel = await client.channels.cache.get("795281274720878613");
+  if (guild != member.guild) {
+    return console.log("Um usuário está a entar num servidor que não é meu por isso sem boas vindas pra ele!");
+   } else {
+      let embed = await new Discord.MessageEmbed()
+      .setColor(config.verde)
+      .setAuthor(member.user.tag, member.user.displayAvatarURL())
+      .setTitle(`<:render:795296632673009665> Boas-vindas <:render:795296632673009665>`)
+      .setImage("https://cdn.discordapp.com/attachments/793859455200002058/795296907379081236/Render.png")
+      .setDescription(`<:render:795296632673009665> Bem vindo, ${member.user} acabou de entar no servidor,
+      Leia o canal <#792364532986413096> para evitares ser ponido
+      
+      Seu nome: ${member.user.tag}
+      
+      Seu id: ${member.user.id}
+      
+      Sua tag: ${member.user.discriminator}
+      
+      Total de membros agor: **${member.guild.memberCount}** membros`)
+      .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+      .setFooter("Todos os direitos reservados")
+      .setTimestamp();
+
+    channel.send(embed);
   }
 });
 
-/*
-client.on('ready', () => {
-    setInterval(function(){ 
-        console.log("ping");
-     }, 30 * 1000);
-});*/
-
-//Boas vindas
-client.on("guildMemberAdd", async (member) => { 
-
-    let guild = await client.guilds.cache.get("792364532353335296");
-    let channel = await client.channels.cache.get("795281274720878613");
-    let emoji = await member.guild.emojis.cache.find(emoji => emoji.name === "nomedoemoji");
-    if (guild != member.guild) {
-      return console.log("Sem boas-vindas pra você! Sai daqui saco pela.");
-     } else {
-        let embed = await new Discord.MessageEmbed()
-        .setColor("#7c2ae8")
-        .setAuthor(member.user.tag, member.user.displayAvatarURL())
-        .setTitle(`${emoji} Boas-vindas ${emoji}`)
-        .setImage("")
-        .setDescription(`**${member.user}**, bem-vindo(a) ao servidor **${guild.name}**! Atualmente estamos com **${member.guild.memberCount} membros**, divirta-se conosco! :heart:`)
-        .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-        .setFooter("Todos os direitos reservados!")
-        .setTimestamp();
-  
-      channel.send(embed);
-    }
-});
-
-//saida 
 client.on("guildMemberRemove", async (member) => { 
 
-    let guild = await client.guilds.cache.get("792364532353335296");
-    let channel = await client.channels.cache.get("795281274720878613");
-    let emoji = await member.guild.emojis.cache.find(emoji => emoji.name === "nomedoemoji");
-    if (guild != member.guild) {
-      return console.log("Algum saco pela saiu do servidor. Mas não é nesse, então tá tudo bem :)");
-     } else {
-        let embed = await new Discord.MessageEmbed()
-        .setColor("#7c2ae8")
-        .setAuthor(member.user.tag, member.user.displayAvatarURL())
-        .setTitle(`${emoji} Adeus! ${emoji}`)
-        .setImage("https://imgur.com/3vYVlHb.gif")
-        .setDescription(`**${member.user.username}**, saiu do servidor! :broken_heart:`)
-        .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-        .setFooter("Todos os direitos reservados!")
-        .setTimestamp();
-  
-      channel.send(embed);
-    }
-});
-
-client.on('message', message => {
-    if (message.author.bot) return;
-    if (message.channel.type == 'dm') return;
-    if (!message.content.toLowerCase().startsWith(config.prefix.toLowerCase())) return;
-    if (message.content.startsWith(`<@!${client.user.id}>`) || message.content.startsWith(`<@${client.user.id}>`)) return;
-
-   const args = message.content
-       .trim().slice(config.prefix.length)
-       .split(/ +/g);
-   const command = args.shift().toLowerCase();
-
-   try {
-       const commandFile = require(`./commands/${command}.js`)
-       commandFile.run(client, message, args);
-   } catch (err) {
-   console.error('Erro:' + err);
- }
-});
-
-client.on("ready",()=>{
-    console.log(`Logando com o bot ${client.user.tag}`);
-    client.user.setActivity(`${config.prefix}help (não tem) | "Render Bot"`)
-});
-
-
-client.login(pass.pass);
+  let guild = await client.guilds.cache.get("792364532353335296");
+  let channel = await client.channels.cache.get("795281274720878613");
+  if (guild != member.guild) {
+    return console.log("Um usuário saio do servidor como não é do meu está tudo bem :)");
+   } else {
+      let embed = await new Discord.MessageEmbed()
+      .setColor(config.vermelho)
+      .setAuthor(member.user.tag, member.user.displayAvatarURL())
+      .setTitle(`<:render:795296632673009665> Adeus! <:render:795296632673009665>`)
+      .setImage("https://cdn.discordapp.com/attachments/793859455200002058/795296907379081236/Render.png")
+      .setDescription(`Adues o ${member.user} acabou de sair do servidor, partio-me o coração 💔
+      
+      Seu nome: ${member.user.tag}
+      
+    

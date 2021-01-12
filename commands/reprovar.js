@@ -11,11 +11,12 @@ exports.run = async (client, message, args) => {
 
 const embed = new MessageEmbed()
     .setTitle('Reprovado')
-    .setDescription(`Olá, o ${message.author} reprovou o bot de ${user} com o motivo de: \n ${rasao}`)
+    .setDescription(`Olá, o ${message.author} reprovou o bot de ${user} com o motivo de: \n **${rasao}**`)
     .setColor('RED')
     .setFooter('Todos os direitos reservados!')
 
 
-    message.guild.channels.cache.get('795282095743565878').send(embed)
+    message.guild.channels.cache.get('795282095743565878').send(`${user}`,embed)
+    await user.send(`${user} olhar o canal <#795282095743565878>`)
     message.delete()
 };

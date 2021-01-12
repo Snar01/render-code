@@ -10,5 +10,6 @@ module.exports.run = async (client, message, args) => {
     .setFooter('Todos os direitos reservados!')
 
     message.guild.channels.cache.get('795284372558184448').send(embed)
-    return message.reply('Enviando com sucesso!')
+    message.delete()
+    return message.author.send('Enviando com sucesso!')
 }
