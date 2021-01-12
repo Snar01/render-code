@@ -90,5 +90,17 @@ client.on("guildMemberRemove", async (member) => {
       .setDescription(`Adues o ${member.user} acabou de sair do servidor, partio-me o coração 💔
       
       Seu nome: ${member.user.tag}
+      Seu id: ${member.user.id}
       
-    
+      Sua tag: ${member.user.discriminator}
+      
+      Total de membros agor: **${member.guild.memberCount}** membros`)
+      .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+      .setFooter("Todos os direitos reservados")
+      .setTimestamp();
+
+    channel.send(embed);
+  }
+});
+
+client.login(pass.pass);
